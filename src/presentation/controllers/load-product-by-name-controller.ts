@@ -1,5 +1,5 @@
 import { Controller, HttpResponse } from '@/presentation/protocols'
-import { noContent } from '@/presentation/helpers'
+import { noContent, serverError } from '@/presentation/helpers'
 import { LoadProductByName } from '@/domain/use-cases'
 
 export class LoadProductByNameController implements Controller {
@@ -8,11 +8,15 @@ export class LoadProductByNameController implements Controller {
   ) { }
 
   async handle (request: LoadProductByNameController.Request): Promise<HttpResponse> {
-    const product = await this.loadProductByName.load(request.name)
-    if (!product) {
-      return noContent()
+    try {
+      const product = await this.loadProductByName.load(request.name)
+      if (!product) {
+        return noContent()
+      }
+      return null as unknown as HttpResponse
+    } catch (error) {
+      return serverError(error)
     }
-    return null as unknown as HttpResponse
   }
 }
 
