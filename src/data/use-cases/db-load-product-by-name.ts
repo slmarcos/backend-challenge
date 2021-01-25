@@ -7,7 +7,6 @@ export class DbLoadProductByName implements LoadProductByName {
   ) { }
 
   async load (name: string): Promise<LoadProductByName.Result> {
-    await this.loadProductByNameRepo.loadByName(name)
-    return null as unknown as LoadProductByName.Result
+    return this.loadProductByNameRepo.loadByName(name)
   }
 }
