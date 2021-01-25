@@ -1,5 +1,6 @@
 import { DbLoadProductByName } from '@/data/use-cases'
 
+import { throwError } from '@/tests/domain/mocks'
 import { LoadProductByNameRepoSpy } from '@/tests/data/mocks'
 
 import faker from 'faker'
@@ -24,5 +25,12 @@ describe('DbLoadProductByName', () => {
     const productName = faker.commerce.productName()
     await sut.load(productName)
     expect(loadProductByNameRepoSpy.name).toBe(productName)
+  })
+
+  test('Should throw if LoadProductByNameRepo throws', async () => {
+    const { sut, loadProductByNameRepoSpy } = makeSut()
+    jest.spyOn(loadProductByNameRepoSpy, 'loadByName').mockImplementationOnce(throwError)
+    const promise = sut.load(faker.commerce.productName())
+    await expect(promise).rejects.toThrow()
   })
 })
