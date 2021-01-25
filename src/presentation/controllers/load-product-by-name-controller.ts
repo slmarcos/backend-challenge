@@ -1,4 +1,5 @@
 import { Controller, HttpResponse } from '@/presentation/protocols'
+import { noContent } from '@/presentation/helpers'
 import { LoadProductByName } from '@/domain/use-cases'
 
 export class LoadProductByNameController implements Controller {
@@ -7,7 +8,10 @@ export class LoadProductByNameController implements Controller {
   ) { }
 
   async handle (request: LoadProductByNameController.Request): Promise<HttpResponse> {
-    await this.loadProductByName.load(request.name)
+    const product = await this.loadProductByName.load(request.name)
+    if (!product) {
+      return noContent()
+    }
     return null as unknown as HttpResponse
   }
 }
