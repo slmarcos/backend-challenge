@@ -4,6 +4,6 @@ import faker from 'faker'
 
 export const mockProductModel = (): ProductModel => ({
   name: faker.commerce.productName(),
-  price: Number(faker.commerce.price),
-  quantity: faker.random.number()
+  price: parseFloat(faker.commerce.price(undefined, undefined, 2)),
+  quantity: faker.random.number(100)
 })

@@ -33,4 +33,10 @@ describe('DbLoadProductByName', () => {
     const promise = sut.load(faker.commerce.productName())
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return ProductModel on success', async () => {
+    const { sut, loadProductByNameRepoSpy } = makeSut()
+    const product = await sut.load(faker.commerce.productName())
+    expect(loadProductByNameRepoSpy.result).toEqual(product)
+  })
 })
