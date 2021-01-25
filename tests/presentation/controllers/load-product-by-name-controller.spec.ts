@@ -1,4 +1,5 @@
 import { LoadProductByNameController } from '@/presentation/controllers'
+import { noContent } from '@/presentation/helpers'
 
 import { LoadProductByNameSpy } from '@/tests/presentation/mocks'
 
@@ -28,5 +29,13 @@ describe('LoadProductByNameController', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(loadProductByNameSpy.name).toBe(request.name)
+  })
+
+  test('Should returns noContent if LoadProductByName returns null', async () => {
+    const { sut, loadProductByNameSpy } = makeSut()
+    const request = mockRequest()
+    loadProductByNameSpy.result = null
+    const result = await sut.handle(request)
+    expect(result).toEqual(noContent())
   })
 })
