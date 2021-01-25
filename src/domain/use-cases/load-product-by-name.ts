@@ -5,5 +5,5 @@ export interface LoadProductByName {
 }
 
 export namespace LoadProductByName {
-  export type Result = ProductModel
+  export type Result = ProductModel | null
 }
