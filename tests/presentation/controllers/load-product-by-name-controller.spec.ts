@@ -1,5 +1,5 @@
 import { LoadProductByNameController } from '@/presentation/controllers'
-import { noContent, serverError } from '@/presentation/helpers'
+import { noContent, ok, serverError } from '@/presentation/helpers'
 import { throwError } from '@/tests/domain/mocks'
 
 import { LoadProductByNameSpy } from '@/tests/presentation/mocks'
@@ -36,15 +36,22 @@ describe('LoadProductByNameController', () => {
     const { sut, loadProductByNameSpy } = makeSut()
     const request = mockRequest()
     loadProductByNameSpy.result = null
-    const result = await sut.handle(request)
-    expect(result).toEqual(noContent())
+    const response = await sut.handle(request)
+    expect(response).toEqual(noContent())
   })
 
   test('Should returns serverError if LoadProductByName throws', async () => {
     const { sut, loadProductByNameSpy } = makeSut()
     const request = mockRequest()
     jest.spyOn(loadProductByNameSpy, 'load').mockImplementationOnce(throwError)
-    const result = await sut.handle(request)
-    expect(result).toEqual(serverError(new Error()))
+    const response = await sut.handle(request)
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('Should returns ok on success', async () => {
+    const { sut, loadProductByNameSpy } = makeSut()
+    const request = mockRequest()
+    const response = await sut.handle(request)
+    expect(response).toEqual(ok(loadProductByNameSpy.result))
   })
 })
