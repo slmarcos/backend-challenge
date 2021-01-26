@@ -8,7 +8,7 @@ export const mockProductModel = (): ProductModel => ({
   quantity: faker.random.number(100)
 })
 
-export const mockProducts = (): ProductModel[] => [
+export const mockProductModels = (): ProductModel[] => [
   {
     name: faker.commerce.productName(),
     price: parseFloat(faker.commerce.price()),
