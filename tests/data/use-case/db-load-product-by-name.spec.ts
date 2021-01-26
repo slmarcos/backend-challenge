@@ -34,9 +34,16 @@ describe('DbLoadProductByName', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test('Should return null if product not exists', async () => {
+    const { sut, loadProductByNameRepoSpy } = makeSut()
+    loadProductByNameRepoSpy.result = null
+    const product = await sut.load(faker.commerce.productName())
+    expect(product).toBeNull()
+  })
+
   test('Should return ProductModel on success', async () => {
     const { sut, loadProductByNameRepoSpy } = makeSut()
     const product = await sut.load(faker.commerce.productName())
-    expect(loadProductByNameRepoSpy.result).toEqual(product)
+    expect(product).toEqual(loadProductByNameRepoSpy.result)
   })
 })
