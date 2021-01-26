@@ -1,4 +1,5 @@
 import { OrderModel, OrderParams, OrderToSave } from '@/domain/models'
+import { LoadOrders } from '@/domain/use-cases'
 
 import faker from 'faker'
 
@@ -45,4 +46,11 @@ export const mockOrderModel = (): OrderModel => ({
     }
   ],
   total: 20
+})
+
+export const mockOrders = (): LoadOrders.Result => ({
+  orders: [
+    mockOrderModel(),
+    mockOrderModel()
+  ]
 })
