@@ -1,5 +1,5 @@
 import { Controller, HttpResponse } from '@/presentation/protocols'
-import { noContent, serverError } from '@/presentation/helpers'
+import { noContent, ok, serverError } from '@/presentation/helpers'
 import { LoadProductByName } from '@/domain/use-cases'
 
 export class LoadProductByNameController implements Controller {
@@ -13,7 +13,7 @@ export class LoadProductByNameController implements Controller {
       if (!product) {
         return noContent()
       }
-      return null as unknown as HttpResponse
+      return ok(product)
     } catch (error) {
       return serverError(error)
     }
