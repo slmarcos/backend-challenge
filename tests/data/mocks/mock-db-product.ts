@@ -1,5 +1,4 @@
 import { LoadProductByNameRepo, UpdateProductStockRepo } from '@/data/protocols'
-import { ProductModel } from '@/domain/models'
 import { mockProductModel } from '@/tests/domain/mocks'
 
 export class LoadProductByNameRepoSpy implements LoadProductByNameRepo {
@@ -14,9 +13,9 @@ export class LoadProductByNameRepoSpy implements LoadProductByNameRepo {
 
 export class UpdateProductStockRepoSpy implements UpdateProductStockRepo {
   action!: string
-  product!: ProductModel
+  product!: UpdateProductStockRepo.Product
 
-  async updateStock (action: string, product: ProductModel): Promise<void> {
+  async updateStock (action: string, product: UpdateProductStockRepo.Product): Promise<void> {
     this.action = action
     this.product = product
   }
