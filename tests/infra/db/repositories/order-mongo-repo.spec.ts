@@ -1,0 +1,43 @@
+import { OrderMongoRepo } from '@/infra/db/repositories'
+import { MongoHelper } from '@/infra/db/helpers'
+import { OrderModel } from '@/infra/db/models'
+import { mockOrderToSave } from '@/tests/domain/mocks'
+
+const MONGO_URI = process.env.MONGO_URL as string
+
+type SutTypes = {
+  sut: OrderMongoRepo
+}
+
+const makeSut = (): SutTypes => {
+  const sut = new OrderMongoRepo()
+  return {
+    sut
+  }
+}
+
+describe('OrderMongoRepo', () => {
+  beforeAll(async () => {
+    await MongoHelper.connect(MONGO_URI)
+  })
+
+  afterAll(async () => {
+    await MongoHelper.disconnect()
+  })
+
+  beforeEach(async () => {
+    await OrderModel.deleteMany({})
+  })
+
+  describe('add()', () => {
+    test('Should return order on success', async () => {
+      const { sut } = makeSut()
+      const params = mockOrderToSave()
+      const order = await sut.add(params)
+      const total = params.products.reduce((acc, value) => (acc + value.price), 0)
+      expect(order.id).toBeTruthy()
+      expect(order.products[0].name).toBe(params.products[0].name)
+      expect(order.total).toBe(total)
+    })
+  })
+})
