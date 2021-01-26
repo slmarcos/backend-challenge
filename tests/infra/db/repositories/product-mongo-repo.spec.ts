@@ -4,6 +4,8 @@ import { ProductModel } from '@/infra/db/models'
 import { mockProductModel } from '@/tests/domain/mocks'
 
 const MONGO_URI = process.env.MONGO_URL as string
+const ACTION_DECREMENTED = 'decremented'
+const ACTION_INCREMENTED = 'incremented'
 
 type SutTypes = {
   sut: ProductMongoRepo
@@ -43,6 +45,50 @@ describe('ProductMongoRepo', () => {
       const product = mockProductModel()
       const result = await sut.loadByName(product.name)
       expect(result).toBeNull()
+    })
+  })
+
+  describe('updateStock()', () => {
+    test('Should product quantity increment value', async () => {
+      const { sut } = makeSut()
+      const product = mockProductModel()
+      const productOrder = {
+        ...product,
+        quantity: 5
+      }
+      await ProductModel.create(product)
+      await sut.updateStock(ACTION_INCREMENTED, productOrder)
+      const result = await ProductModel.findOne({ name: product.name })
+      expect(result?.quantity).toBe(product.quantity + productOrder.quantity)
+    })
+
+    test('Should product quantity decrement value', async () => {
+      const { sut } = makeSut()
+      const product = mockProductModel()
+      const productOrder = {
+        ...product,
+        quantity: 5
+      }
+      await ProductModel.create(product)
+      await sut.updateStock(ACTION_DECREMENTED, productOrder)
+      const result = await ProductModel.findOne({ name: product.name })
+      expect(result?.quantity).toBe(product.quantity - productOrder.quantity)
+    })
+
+    test('Should product quantity equal 0 if decrement and quantity is 0', async () => {
+      const { sut } = makeSut()
+      const product = {
+        ...mockProductModel(),
+        quantity: 0
+      }
+      const productOrder = {
+        ...product,
+        quantity: 5
+      }
+      await ProductModel.create(product)
+      await sut.updateStock(ACTION_DECREMENTED, productOrder)
+      const result = await ProductModel.findOne({ name: product.name })
+      expect(result?.quantity).toBe(0)
     })
   })
 })

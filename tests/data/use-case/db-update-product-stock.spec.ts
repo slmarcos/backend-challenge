@@ -32,7 +32,7 @@ describe('DbUpdateProductStock', () => {
 
   test('Should throw if UpdateProductStockRepo throws', async () => {
     const { sut, updateProductStockRepoSpy } = makeSut()
-    jest.spyOn(updateProductStockRepoSpy, 'update').mockImplementationOnce(throwError)
+    jest.spyOn(updateProductStockRepoSpy, 'updateStock').mockImplementationOnce(throwError)
     const action = ACTION_DECREMENTED
     const products = [mockProductModel(), mockProductModel()]
     const promise = sut.update(action, products)

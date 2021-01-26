@@ -16,7 +16,7 @@ export class UpdateProductStockRepoSpy implements UpdateProductStockRepo {
   action!: string
   product!: ProductModel
 
-  async update (action: string, product: ProductModel): Promise<void> {
+  async updateStock (action: string, product: ProductModel): Promise<void> {
     this.action = action
     this.product = product
   }
