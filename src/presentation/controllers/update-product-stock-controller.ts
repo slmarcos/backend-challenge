@@ -10,7 +10,6 @@ export class UpdateProductStockController implements Controller {
     try {
       const productParam = [{
         name: request.content,
-        price: 0,
         quantity: 1
       }]
       await this.updateProductStock.update(request.action, productParam)
