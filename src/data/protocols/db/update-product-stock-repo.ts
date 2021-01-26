@@ -1,7 +1,9 @@
 import { ProductModel } from '@/domain/models'
 
 export interface UpdateProductStockRepo {
-  update: (action: string, product: ProductModel) => Promise<void>
+  updateStock: (action: string, product: UpdateProductStockRepo.Product) => Promise<void>
 }
 
-export namespace UpdateProductStockRepo { }
+export namespace UpdateProductStockRepo {
+  export type Product = ProductModel
+}

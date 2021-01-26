@@ -9,7 +9,7 @@ export class DbUpdateProductStock implements UpdateProductStock {
 
   async update (action: string, products: ProductOrderModel[]): Promise<void> {
     for (const item of products) {
-      await this.updateProductStockRepo.update(action, item)
+      await this.updateProductStockRepo.updateStock(action, item)
     }
   }
 }
