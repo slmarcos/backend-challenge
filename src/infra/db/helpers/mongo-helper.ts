@@ -8,7 +8,8 @@ export const MongoHelper = {
     this.uri = uri
     this.client = await mongoose.connect(this.uri, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useCreateIndex: true
     })
   },
 
