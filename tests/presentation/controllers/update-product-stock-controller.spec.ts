@@ -30,7 +30,6 @@ describe('UpdateProductStockController', () => {
     const request = mockRequest()
     const products = [{
       name: request.content,
-      price: 0,
       quantity: 1
     }]
     await sut.handle(request)

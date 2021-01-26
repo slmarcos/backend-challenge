@@ -1,7 +1,7 @@
 import { AddOrderController } from '@/presentation/controllers'
 import { ok, serverError } from '@/presentation/helpers'
 import { mockOrderParams, throwError } from '@/tests/domain/mocks'
-import { AddOrderSpy, CheckProductsHasStockSpy } from '@/tests/presentation/mocks'
+import { AddOrderSpy, CheckProductsHasStockSpy, UpdateProductStockSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (): AddOrderController.Request => mockOrderParams()
 
@@ -9,16 +9,19 @@ type SutTypes = {
   sut: AddOrderController
   checkProductsHasStockSpy: CheckProductsHasStockSpy
   addOrderSpy: AddOrderSpy
+  updateProductStock: UpdateProductStockSpy
 }
 
 const makeSut = (): SutTypes => {
   const checkProductsHasStockSpy = new CheckProductsHasStockSpy()
   const addOrderSpy = new AddOrderSpy()
-  const sut = new AddOrderController(checkProductsHasStockSpy, addOrderSpy)
+  const updateProductStock = new UpdateProductStockSpy()
+  const sut = new AddOrderController(checkProductsHasStockSpy, addOrderSpy, updateProductStock)
   return {
     sut,
     checkProductsHasStockSpy,
-    addOrderSpy
+    addOrderSpy,
+    updateProductStock
   }
 }
 
@@ -47,6 +50,15 @@ describe('AddOrderController', () => {
     expect(addOrderSpy.params).toEqual(request)
   })
 
+  test('Should calls UpdateProductStock use case with correct params', async () => {
+    const { sut, updateProductStock } = makeSut()
+    const request = mockRequest()
+    const ACTION_DECREMENTED = 'decremented'
+    await sut.handle(request)
+    expect(updateProductStock.action).toBe(ACTION_DECREMENTED)
+    expect(updateProductStock.products).toEqual(request.products)
+  })
+
   test('Should returns ok with order on success', async () => {
     const { sut, addOrderSpy } = makeSut()
     const request = mockRequest()
@@ -64,6 +76,13 @@ describe('AddOrderController', () => {
   test('Should returns serverError if AddOrder throws', async () => {
     const { sut, addOrderSpy } = makeSut()
     jest.spyOn(addOrderSpy, 'add').mockImplementationOnce(throwError)
+    const response = await sut.handle(mockRequest())
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('Should returns serverError if UpdateProductStock throws', async () => {
+    const { sut, updateProductStock } = makeSut()
+    jest.spyOn(updateProductStock, 'update').mockImplementationOnce(throwError)
     const response = await sut.handle(mockRequest())
     expect(response).toEqual(serverError(new Error()))
   })

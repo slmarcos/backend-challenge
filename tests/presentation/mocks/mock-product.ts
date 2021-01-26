@@ -1,4 +1,4 @@
-import { ProductModel, ProductOrderModel } from '@/domain/models'
+import { ProductModel, ProductOrderParam } from '@/domain/models'
 import { CheckProductsHasStock, LoadProductByName, UpdateProductStock } from '@/domain/use-cases'
 
 import { mockProductModel } from '@/tests/domain/mocks'
@@ -24,9 +24,9 @@ export class CheckProductsHasStockSpy implements CheckProductsHasStock {
 
 export class UpdateProductStockSpy implements UpdateProductStock {
   action!: string
-  products!: ProductOrderModel[]
+  products!: ProductOrderParam[]
 
-  async update (action: string, products: ProductOrderModel[]): Promise<void> {
+  async update (action: string, products: ProductOrderParam[]): Promise<void> {
     this.action = action
     this.products = products
   }
