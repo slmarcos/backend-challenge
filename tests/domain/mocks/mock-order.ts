@@ -35,12 +35,12 @@ export const mockOrderModel = (): OrderModel => ({
   products: [
     {
       name: faker.commerce.productName(),
-      price: parseFloat(faker.commerce.price()),
+      price: 1,
       quantity: 15
     },
     {
       name: faker.commerce.productName(),
-      price: parseFloat(faker.commerce.price()),
+      price: 1,
       quantity: 5
     }
   ],

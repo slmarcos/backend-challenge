@@ -34,7 +34,7 @@ describe('OrderMongoRepo', () => {
       const { sut } = makeSut()
       const params = mockOrderToSave()
       const order = await sut.add(params)
-      const total = params.products.reduce((acc, value) => (acc + value.price), 0)
+      const total = params.products.reduce((acc, value) => (acc + (value.price * value.quantity)), 0)
       expect(order.id).toBeTruthy()
       expect(order.products[0].name).toBe(params.products[0].name)
       expect(order.total).toBe(total)
