@@ -2,3 +2,4 @@ node_modules
 globalConfig.json
 dist
 db-data
+coverage
