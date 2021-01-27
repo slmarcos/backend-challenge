@@ -23,5 +23,6 @@ export const populateDatabase = async () => {
   const products = await ProductModel.find({})
   if (products.length === 0) {
     await ProductModel.insertMany(data)
+    console.log(`[${new Date().toISOString()}]`, 'Populate database finished with success')
   }
 }
