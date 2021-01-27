@@ -75,7 +75,7 @@ describe('ProductMongoRepo', () => {
       expect(result?.quantity).toBe(product.quantity - productOrder.quantity)
     })
 
-    test('Should product quantity equal 0 if decrement and quantity is 0', async () => {
+    test('Should product quantity not decrement if quantity stock is equal 0', async () => {
       const { sut } = makeSut()
       const product = {
         ...mockProductModel(),
@@ -89,6 +89,26 @@ describe('ProductMongoRepo', () => {
       await sut.updateStock(ACTION_DECREMENTED, productOrder)
       const result = await ProductModel.findOne({ name: product.name })
       expect(result?.quantity).toBe(0)
+    })
+
+    test('Should product quantity increment if initial quantity stock equal 0', async () => {
+      const { sut } = makeSut()
+      const product = { ...mockProductModel(), quantity: 0 }
+      const productOrder = { ...product, quantity: 5 }
+      await ProductModel.create(product)
+      await sut.updateStock(ACTION_INCREMENTED, productOrder)
+      const result = await ProductModel.findOne({ name: product.name })
+      expect(result?.quantity).toBe(product.quantity + productOrder.quantity)
+    })
+
+    test('Should product quantity decrement if initial quantity stock equal gte 1', async () => {
+      const { sut } = makeSut()
+      const product = { ...mockProductModel(), quantity: 1 }
+      const productOrder = { ...product, quantity: 1 }
+      await ProductModel.create(product)
+      await sut.updateStock(ACTION_DECREMENTED, productOrder)
+      const result = await ProductModel.findOne({ name: product.name })
+      expect(result?.quantity).toBe(product.quantity - productOrder.quantity)
     })
   })
 })
