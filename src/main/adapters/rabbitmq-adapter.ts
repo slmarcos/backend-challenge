@@ -6,7 +6,7 @@ export const adaptConsumeMessage = (controller: Controller) => {
     if (message) {
       const request = {
         action: message.fields.routingKey,
-        content: message?.content.toString()
+        content: message?.content.toString().replace(/"/g, '')
       }
       await controller.handle(request)
     }
