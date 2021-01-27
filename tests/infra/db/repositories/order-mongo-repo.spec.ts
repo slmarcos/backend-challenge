@@ -3,6 +3,8 @@ import { MongoHelper } from '@/infra/db/helpers'
 import { OrderModel } from '@/infra/db/models'
 import { mockOrderToSave } from '@/tests/domain/mocks'
 
+import bson from 'bson-objectid'
+
 const MONGO_URI = process.env.MONGO_URL as string
 
 type SutTypes = {
@@ -55,6 +57,23 @@ describe('OrderMongoRepo', () => {
       const result = await sut.load()
       expect(result).toBeTruthy()
       expect(result.orders.length).toBe(0)
+    })
+  })
+
+  describe('loadById()', () => {
+    test('Should return order on success', async () => {
+      const { sut } = makeSut()
+      const order = (await OrderModel.create(mockOrderToSave()))
+      const result = await sut.loadById(order.id)
+      expect(result).toBeTruthy()
+      expect(result?.id).toEqual(order._id)
+      expect(result?.products[0].name).toBe(order.products[0].name)
+    })
+
+    test('Should return null if no order found', async () => {
+      const { sut } = makeSut()
+      const result = await sut.loadById(bson.generate())
+      expect(result).toBeNull()
     })
   })
 })
