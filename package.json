@@ -55,6 +55,9 @@
     "mongoose": "^5.11.13",
     "validator": "^13.5.2"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "_moduleAliases": {
     "@": "dist"
   }
