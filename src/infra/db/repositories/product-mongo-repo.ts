@@ -11,9 +11,15 @@ export class ProductMongoRepo implements LoadProductByNameRepo, UpdateProductSto
 
   async updateStock (action: string, product: UpdateProductStockRepo.Product): Promise<void> {
     const ACTION_INCREMENTED = 'incremented'
-    const quantity = action === ACTION_INCREMENTED
-      ? product.quantity
-      : product.quantity * -1
-    await ProductModel.updateOne({ name: product.name, quantity: { $gt: 0 } }, { $inc: { quantity } })
+    let minValue = 0
+    let quantity = 0
+    if (action === ACTION_INCREMENTED) {
+      quantity = product.quantity
+      minValue = 0
+    } else {
+      quantity = product.quantity * -1
+      minValue = 1
+    }
+    await ProductModel.updateOne({ name: product.name, quantity: { $gte: minValue } }, { $inc: { quantity } })
   }
 }
