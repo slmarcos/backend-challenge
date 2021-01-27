@@ -1,4 +1,4 @@
-import { AddOrder, LoadOrders } from '@/domain/use-cases'
+import { AddOrder, LoadOrderById, LoadOrders } from '@/domain/use-cases'
 
 import { mockOrderModel, mockOrders } from '@/tests/domain/mocks'
 
@@ -18,6 +18,16 @@ export class LoadOrdersSpy implements LoadOrders {
 
   async load (): Promise<LoadOrders.Result> {
     this.calls++
+    return this.result
+  }
+}
+
+export class LoadOrderByIdSpy implements LoadOrderById {
+  id!: string
+  result: LoadOrderById.Result = mockOrderModel()
+
+  async loadById (id: string): Promise<LoadOrderById.Result> {
+    this.id = id
     return this.result
   }
 }
