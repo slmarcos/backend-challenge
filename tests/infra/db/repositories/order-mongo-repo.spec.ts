@@ -40,4 +40,21 @@ describe('OrderMongoRepo', () => {
       expect(order.total).toBe(total)
     })
   })
+
+  describe('load()', () => {
+    test('Should return all orders on success', async () => {
+      const { sut } = makeSut()
+      await OrderModel.create(mockOrderToSave())
+      const result = await sut.load()
+      expect(result).toBeTruthy()
+      expect(result.orders.length).toBe(1)
+    })
+
+    test('Should return empty array if no order found', async () => {
+      const { sut } = makeSut()
+      const result = await sut.load()
+      expect(result).toBeTruthy()
+      expect(result.orders.length).toBe(0)
+    })
+  })
 })
