@@ -50,7 +50,9 @@ export class OrderMongoRepo implements AddOrderRepo, LoadOrdersRepo, LoadOrderBy
             $push: {
               id: '$_id',
               products: '$products',
-              total: '$total'
+              total: {
+                $round: ['$total', 2]
+              }
             }
           }
         }
@@ -106,7 +108,9 @@ export class OrderMongoRepo implements AddOrderRepo, LoadOrdersRepo, LoadOrderBy
           _id: 0,
           id: '$_id',
           products: 1,
-          total: 1
+          total: {
+            $round: ['$total', 2]
+          }
         }
       }
     ]).exec()
