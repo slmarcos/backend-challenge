@@ -1,7 +1,9 @@
-import { AddOrderRepo, LoadOrdersRepo } from '@/data/protocols'
+import { AddOrderRepo, LoadOrderByIdRepo, LoadOrdersRepo } from '@/data/protocols'
 import { OrderModel } from '@/infra/db/models'
 
-export class OrderMongoRepo implements AddOrderRepo, LoadOrdersRepo {
+import { mongo } from 'mongoose'
+
+export class OrderMongoRepo implements AddOrderRepo, LoadOrdersRepo, LoadOrderByIdRepo {
   async add (data: AddOrderRepo.Params): Promise<AddOrderRepo.Result> {
     const order = await OrderModel.create(data)
     return {
@@ -62,5 +64,52 @@ export class OrderMongoRepo implements AddOrderRepo, LoadOrdersRepo {
     ]
     ).exec()
     return orders[0] || { orders: [] }
+  }
+
+  async loadById (id: string): Promise<LoadOrderByIdRepo.Result> {
+    const order = await OrderModel.aggregate([
+      {
+        $match: {
+          _id: new mongo.ObjectID(id)
+        }
+      },
+      {
+        $unwind: {
+          path: '$products'
+        }
+      },
+      {
+        $project: {
+          products: 1,
+          totalProd: {
+            $multiply: ['$products.price', '$products.quantity']
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          products: {
+            $push: {
+              name: '$products.name',
+              price: '$products.price',
+              quantity: '$products.quantity'
+            }
+          },
+          total: {
+            $sum: '$totalProd'
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          products: 1,
+          total: 1
+        }
+      }
+    ]).exec()
+    return order[0] || null
   }
 }
