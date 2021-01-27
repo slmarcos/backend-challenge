@@ -1,6 +1,11 @@
 import { AddOrderController } from '@/presentation/controllers'
-import { makeCheckProductsHasStock, makeAddOrder, makeUpdateProductStock } from '@/main/factories/use-cases'
+import { makeArrayValidator, makeCheckProductsHasStock, makeAddOrder, makeUpdateProductStock } from '@/main/factories'
 
 export const makeAddOrderController = (): AddOrderController => {
-  return new AddOrderController(makeCheckProductsHasStock(), makeAddOrder(), makeUpdateProductStock())
+  return new AddOrderController(
+    makeArrayValidator(),
+    makeCheckProductsHasStock(),
+    makeAddOrder(),
+    makeUpdateProductStock()
+  )
 }

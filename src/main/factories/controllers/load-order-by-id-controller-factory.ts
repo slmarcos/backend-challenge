@@ -1,6 +1,6 @@
 import { LoadOrderByIdController } from '@/presentation/controllers'
-import { makeLoadOrderById } from '@/main/factories/use-cases'
+import { makeLoadOrderByIdValidator, makeLoadOrderById } from '@/main/factories'
 
 export const makeLoadOrderByIdController = (): LoadOrderByIdController => {
-  return new LoadOrderByIdController(makeLoadOrderById())
+  return new LoadOrderByIdController(makeLoadOrderByIdValidator(), makeLoadOrderById())
 }

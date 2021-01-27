@@ -1,10 +1,11 @@
-import { Controller, HttpResponse } from '@/presentation/protocols'
-import { ok, serverError } from '@/presentation/helpers'
+import { Controller, HttpResponse, Validator } from '@/presentation/protocols'
+import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { AddOrder, CheckProductsHasStock, UpdateProductStock } from '@/domain/use-cases'
 import { OrderParams } from '@/domain/models'
 
 export class AddOrderController implements Controller {
   constructor (
+    private readonly validator: Validator,
     private readonly checkProductsHasStock: CheckProductsHasStock,
     private readonly addOrder: AddOrder,
     private readonly updateProductSock: UpdateProductStock
@@ -12,6 +13,10 @@ export class AddOrderController implements Controller {
 
   async handle (request: AddOrderController.Request): Promise<HttpResponse> {
     try {
+      const error = this.validator.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
       const { products } = request
       const ACTION_DECREMENTED = 'decremented'
       const hasStock = await this.checkProductsHasStock.check(products)
