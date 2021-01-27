@@ -1,8 +1,8 @@
 {
-  "name": "backend-delivery",
+  "name": "backend-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/main/server.js",
   "scripts": {
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
@@ -13,7 +13,8 @@
     "build": "tsc -p tsconfig-build.json",
     "start:dev": "cross-env NODE_ENV=development node dist/main/server.js",
     "start:prod": "node dist/main/server.js",
-    "up": "npm run build && docker-compose up -d"
+    "up": "npm run build && docker-compose up -d",
+    "down": "docker-compose down"
   },
   "author": "Marcos Lopes",
   "license": "ISC",
