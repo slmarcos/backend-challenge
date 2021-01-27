@@ -1,10 +1,11 @@
 # Backend-Challenge
 
-A API está disponível para acesso na porta 3010.
+Para rodar o projeto pela primeira vez é necessário executar o comando `npm install` e na sequência o `npm run up`. A API estará disponível para acesso na porta **3010**.
 
 Na primeira execução o banco de dados será populado com os dados do arquivo ***products.csv*** que está no diretório ***csv***.
 
 Os arquivos do diretório ***data/db*** do Mongo são mapeados para a pasta na raiz com nome de ***db-data***.
+
 
 # **Scripts disponíveis**
 
