@@ -37,7 +37,9 @@ describe('Product Routes', () => {
       const product = await ProductModel.create(mockProduct)
       await request(app)
         .get(`/products/${product.name}`)
-        .expect(200)
+        .expect(200, {
+          ...mockProduct
+        })
     })
   })
 })
