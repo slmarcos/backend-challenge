@@ -1,4 +1,5 @@
-# Backend-Challenge
+# **Backend-Challenge**
+[![Build Status](https://travis-ci.com/slmarcos/backend-challenge.svg?branch=main)](https://travis-ci.com/slmarcos/backend-challenge)
 
 Para rodar o projeto pela primeira vez é necessário executar o comando `npm install` e na sequência o `npm run up`. A API estará disponível para acesso na porta **3010**.
 
