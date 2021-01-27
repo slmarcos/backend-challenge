@@ -1,4 +1,4 @@
-import { AddOrderRepo, LoadOrdersRepo } from '@/data/protocols'
+import { AddOrderRepo, LoadOrderByIdRepo, LoadOrdersRepo } from '@/data/protocols'
 import { OrderParams } from '@/domain/models'
 import { LoadOrders } from '@/domain/use-cases'
 
@@ -21,8 +21,19 @@ export class AddOrderRepoSpy implements AddOrderRepo {
 export class LoadOrdersRepoSpy implements LoadOrdersRepo {
   result = mockOrders()
   calls = 0
+
   async load (): Promise<LoadOrders.Result> {
     this.calls++
+    return this.result
+  }
+}
+
+export class LoadOrderByIdRepoSpy implements LoadOrderByIdRepo {
+  id!: string
+  result: LoadOrderByIdRepo.Result = mockOrderModel()
+
+  async loadById (id: string): Promise<LoadOrderByIdRepo.Result> {
+    this.id = id
     return this.result
   }
 }
