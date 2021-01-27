@@ -13,6 +13,7 @@ export const RabbitMQHelper = {
   async connect (url: string, username: string, password: string) {
     const credentials = this.credentials(username, password)
     this.connection = await connect(url, { credentials })
+    return this.connection
   },
 
   async createChannel () {

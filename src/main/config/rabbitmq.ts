@@ -2,10 +2,23 @@ import env from '@/main/config/env'
 import { RabbitMQHelper } from '@/infra/rabbitmq/helpers'
 import { bindChannels, consumeChannels } from '@/main/rabbitmq'
 
-export default async () => {
-  return RabbitMQHelper.connect(env.stockServiceUrl!, env.stockServiceUser, env.stockServicePassword)
-    .then(async () => RabbitMQHelper.createChannel())
-    .then(async () => RabbitMQHelper.createQueue())
-    .then(async () => bindChannels())
-    .then(async () => consumeChannels())
+export const connectStockService = async () => {
+  try {
+    const connection = await RabbitMQHelper.connect(env.stockServiceUrl!, env.stockServiceUser, env.stockServicePassword)
+
+    connection.on('error', async () => connectStockService())
+    connection.on('close', async () => connectStockService())
+
+    await RabbitMQHelper.createChannel()
+    await RabbitMQHelper.createQueue()
+    await bindChannels()
+    await consumeChannels()
+
+    console.log(`[${new Date().toISOString()}]`, 'Stock service connection OK')
+  } catch (error) {
+    console.error(`[${new Date().toISOString()}]`, 'Error connecting to stock service:', error.message)
+    setTimeout(() => {
+      connectStockService()
+    }, 5000)
+  }
 }
