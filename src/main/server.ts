@@ -33,7 +33,7 @@ const onError = (error: NodeJS.ErrnoException): void => {
 server.on('listening', onListening)
 server.on('error', onError)
 
-MongoHelper.connect(env.mongoUrl)
+MongoHelper.connect(env.mongoUrl!)
   .then(async () => populateDatabase())
   .then(async () => connectStockService())
   .then(() => console.log('Stock service connection: OK'))
