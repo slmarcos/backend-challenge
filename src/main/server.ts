@@ -3,6 +3,7 @@ import env from '@/main/config/env'
 import app from '@/main/config/app'
 import connectStockService from '@/main/config/rabbitmq'
 import { MongoHelper } from '@/infra/db/helpers'
+import { populateDatabase } from './utils/populate-database'
 
 import http from 'http'
 
@@ -33,6 +34,7 @@ server.on('listening', onListening)
 server.on('error', onError)
 
 MongoHelper.connect(env.mongoUrl)
+  .then(async () => populateDatabase())
   .then(async () => connectStockService())
   .then(() => console.log('Stock service connection: OK'))
   .then(() => server.listen(port))
