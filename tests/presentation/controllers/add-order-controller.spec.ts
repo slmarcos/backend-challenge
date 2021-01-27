@@ -1,24 +1,27 @@
 import { AddOrderController } from '@/presentation/controllers'
-import { ok, serverError } from '@/presentation/helpers'
+import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { mockOrderParams, throwError } from '@/tests/domain/mocks'
-import { AddOrderSpy, CheckProductsHasStockSpy, UpdateProductStockSpy } from '@/tests/presentation/mocks'
+import { AddOrderSpy, CheckProductsHasStockSpy, UpdateProductStockSpy, ValidatorSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (): AddOrderController.Request => mockOrderParams()
 
 type SutTypes = {
   sut: AddOrderController
+  validatorSpy: ValidatorSpy
   checkProductsHasStockSpy: CheckProductsHasStockSpy
   addOrderSpy: AddOrderSpy
   updateProductStock: UpdateProductStockSpy
 }
 
 const makeSut = (): SutTypes => {
+  const validatorSpy = new ValidatorSpy()
   const checkProductsHasStockSpy = new CheckProductsHasStockSpy()
   const addOrderSpy = new AddOrderSpy()
   const updateProductStock = new UpdateProductStockSpy()
-  const sut = new AddOrderController(checkProductsHasStockSpy, addOrderSpy, updateProductStock)
+  const sut = new AddOrderController(validatorSpy, checkProductsHasStockSpy, addOrderSpy, updateProductStock)
   return {
     sut,
+    validatorSpy,
     checkProductsHasStockSpy,
     addOrderSpy,
     updateProductStock
@@ -26,6 +29,20 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddOrderController', () => {
+  test('Should call Validator with correct values', async () => {
+    const { sut, validatorSpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validatorSpy.input).toEqual(request)
+  })
+
+  test('Should return badRequest if Validator fails', async () => {
+    const { sut, validatorSpy } = makeSut()
+    validatorSpy.error = new Error()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(validatorSpy.error))
+  })
+
   test('Should calls CheckProductsHasStock use case with correct params', async () => {
     const { sut, checkProductsHasStockSpy } = makeSut()
     const request = mockRequest()
