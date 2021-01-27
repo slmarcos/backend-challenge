@@ -24,10 +24,27 @@ services:
   mongo:
     container_name: mongo-container
     image: mongo
+    networks:
+      - app-network
     volumes:
       - ./db-data:/data/db
     ports:
       - "27017:27017"
+    restart: on-failure
+  #################################################################################
+  api:
+    build: .
+    image: backend-challenge-api
+    container_name: backend-delivery_api
+    networks:
+      - app-network
+    ports:
+      - 3010:3010
+    depends_on:
+      - mongo
+    links:
+      - mongo
+      - rabbitmq
     restart: on-failure
 networks:
   app-network:
